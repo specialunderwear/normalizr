@@ -1,5 +1,5 @@
 import EntitySchema from './EntitySchema';
-import IterableSchema from './IterableSchema';
+import ArraySchema from './ArraySchema';
 import UnionSchema from './UnionSchema';
 import isEqual from 'lodash/isEqual';
 import isObject from 'lodash/isObject';
@@ -102,7 +102,7 @@ function visit(obj, schema, bag, options) {
 
   if (schema instanceof EntitySchema) {
     return visitEntity(obj, schema, bag, options);
-  } else if (schema instanceof IterableSchema) {
+  } else if (schema instanceof ArraySchema) {
     return visitIterable(obj, schema, bag, options);
   } else if (schema instanceof UnionSchema) {
     return visitUnion(obj, schema, bag, options);
@@ -112,11 +112,11 @@ function visit(obj, schema, bag, options) {
 }
 
 export function arrayOf(schema, options) {
-  return new IterableSchema(schema, options);
+  return new ArraySchema(schema, options);
 }
 
 export function valuesOf(schema, options) {
-  return new IterableSchema(schema, options);
+  return new ArraySchema(schema, options);
 }
 
 export function unionOf(schema, options) {

@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/paularmstrong/normalizr",
   "scripts": {
-    "test": "mocha --compilers js:babel-register --recursive",
+    "test": "mocha --compilers js:babel-register --recursive --ui bdd",
     "test:watch": "npm run test -- --watch",
     "prebuild": "rimraf dist lib",
     "build": "webpack && babel src --out-dir lib",
@@ -42,7 +42,8 @@
     "babel-preset-stage-1": "^6.5.0",
     "babel-register": "^6.8.0",
     "chai": "^3.2.0",
-    "mocha": "^2.4.5",
+    "deep-freeze": "0.0.1",
+    "mocha": "^2.2.5",
     "rimraf": "^2.4.2",
     "webpack": "^1.13.0"
   },

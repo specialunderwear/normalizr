@@ -1,16 +1,15 @@
 export default class EntitySchema {
-  constructor(key, options = {}) {
+  constructor(key, { assignEntity, idAttribute, meta } = {}) {
     if (!key || typeof key !== 'string') {
       throw new Error('A string non-empty key is required');
     }
 
     this._key = key;
-    this._assignEntity = options.assignEntity;
+    this._assignEntity = assignEntity;
 
-    const idAttribute = options.idAttribute || 'id';
-    this._getId = typeof idAttribute === 'function' ? idAttribute : x => x[idAttribute];
-    this._idAttribute = idAttribute;
-    this._meta = options.meta;
+    this._idAttribute = idAttribute || 'id';
+    this._getId = typeof this._idAttribute === 'function' ? this._idAttribute : (x) => x[this._idAttribute];
+    this._meta = meta;
   }
 
   getAssignEntity() {
