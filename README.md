@@ -248,6 +248,12 @@ const article = new Schema('articles', { idAttribute: 'slug' });
 function generateSlug(entity) { /* ... */ }
 const article = new Schema('articles', { idAttribute: generateSlug });
 
+// The function is passed both the current value and its key
+// This is helpful in occasions where your data is keyed by id, but doesn't contain id inside the value
+const keyedByIdJson = { 1: { ... }, 2: { ... }, 3: { ... } };
+function generateSlug(entity, value) { return value; }
+const article = new Schema('articles', { idAttribute: generateSlug });
+
 // You can also specify meta properties to be used for customizing the output in assignEntity (see below)
 const article = new Schema('articles', { idAttribute: 'slug', meta: { removeProps: ['publisher'] }});
 
@@ -269,7 +275,7 @@ const article = new Schema('articles', { defaults: { likes: 0 } });
 
 ### `Schema.prototype.define(nestedSchema)`
 
-Lets you specify relationships between different entities.  
+Lets you specify relationships between different entities.
 
 ```javascript
 const article = new Schema('articles');
