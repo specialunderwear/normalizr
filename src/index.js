@@ -1,11 +1,10 @@
 import EntitySchema from './EntitySchema';
 import IterableSchema from './IterableSchema';
+import DictionarySchema from './DictionarySchema.js';
 import UnionSchema from './UnionSchema';
 import isEqual from 'lodash/isEqual';
 import isObject from 'lodash/isObject';
 
-class DictionarySchema extends IterableSchema {
-}
 
 const defaultDictionaryStoredKeyName = '_dictionaryKeyName';
 
