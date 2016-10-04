@@ -6,8 +6,6 @@ import isEqual from 'lodash/isEqual';
 import isObject from 'lodash/isObject';
 
 
-const defaultDictionaryStoredKeyName = '_dictionaryKeyName';
-
 function defaultAssignEntity(normalized, key, entity) {
   normalized[key] = entity;
 }
@@ -31,7 +29,7 @@ function visitObject(obj, schema, bag, options, collectionKey) {
 }
 
 function visitDictionary(obj, schema, bag, options) {
-    const { dictionaryStoredKeyName = defaultDictionaryStoredKeyName } = options;
+    const dictionaryStoredKeyName = schema.getDictionaryStoredKeyName();
     const itemSchema = schema.getItemSchema();
 
     return Object.keys(obj).reduce(function (objMap, key) {
