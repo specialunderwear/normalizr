@@ -1,3 +1,7 @@
+function defaultAssignEntity(normalized, key, entity) {
+  normalized[key] = entity;
+}
+
 export default class EntitySchema {
   constructor(key, options = {}) {
     if (!key || typeof key !== 'string') {
@@ -5,7 +9,8 @@ export default class EntitySchema {
     }
 
     this._key = key;
-    this._assignEntity = options.assignEntity;
+    const { assignEntity = defaultAssignEntity } = options;
+    this._assignEntity = assignEntity;
 
     const idAttribute = options.idAttribute || 'id';
     this._getId = typeof idAttribute === 'function' ? idAttribute : x => x[idAttribute];

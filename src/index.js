@@ -4,6 +4,11 @@ import UnionSchema from './UnionSchema';
 import isEqual from 'lodash/isEqual';
 import isObject from 'lodash/isObject';
 
+class DictionarySchema extends IterableSchema {
+}
+
+const defaultDictionaryStoredKeyName = '_dictionaryKeyName';
+
 function defaultAssignEntity(normalized, key, entity) {
   normalized[key] = entity;
 }
@@ -19,11 +24,25 @@ function visitObject(obj, schema, bag, options, collectionKey) {
       const entity = visit(obj[key], schema[key], bag, options, collectionKey);
       assignEntity.call(null, normalized, key, entity, obj, schema);
       if (schemaAssignEntity) {
-        schemaAssignEntity.call(null, normalized, key, entity, obj, schema);
+        schemaAssignEntity.call(null, normalized, key, entity, obj, schema, collectionKey);
       }
     }
   }
   return normalized;
+}
+
+function visitDictionary(obj, schema, bag, options) {
+    const { dictionaryStoredKeyName = defaultDictionaryStoredKeyName } = options;
+    const itemSchema = schema.getItemSchema();
+
+    return Object.keys(obj).reduce(function (objMap, key) {
+        const dictionaryEntry = obj[key];
+        dictionaryEntry[dictionaryStoredKeyName] = key;
+        const storageId = itemSchema.getId(dictionaryEntry, key);
+        const entity = visitEntity(dictionaryEntry, itemSchema, bag, options, storageId);
+        objMap[key] = entity;
+        return objMap
+    }, {});
 }
 
 function defaultMapper(iterableSchema, itemSchema, bag, options) {
@@ -103,6 +122,8 @@ function visit(obj, schema, bag, options, collectionKey) {
 
   if (schema instanceof EntitySchema) {
     return visitEntity(obj, schema, bag, options, collectionKey);
+  } else if (schema instanceof DictionarySchema) {
+      return visitDictionary(obj, schema, bag, options);
   } else if (schema instanceof IterableSchema) {
     return visitIterable(obj, schema, bag, options);
   } else if (schema instanceof UnionSchema) {
@@ -125,6 +146,10 @@ export function arrayOf(schema, options) {
 
 export function valuesOf(schema, options) {
   return new IterableSchema(schema, options);
+}
+
+export function dictionaryOf(schema, options) {
+    return new DictionarySchema(schema, options);
 }
 
 export function unionOf(schema, options) {
