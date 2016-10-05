@@ -1,15 +1,15 @@
 import ArraySchema from './IterableSchema';
 
-const defaultDictionaryStoredKeyName = '_dictionaryKeyName';
+const defaultKeyedObjectStoredKeyName = '_dictionaryKeyName';
 
-export default class DictionarySchema extends ArraySchema {
+export default class KeyedObjectSchema extends ArraySchema {
     constructor(itemSchema, options = {}) {
         super(itemSchema, options);
-        const { dictionaryStoredKeyName = defaultDictionaryStoredKeyName } = options;
-        this._dictionaryStoredKeyName = dictionaryStoredKeyName;
+        const { keyedObjectStoredKeyName = defaultKeyedObjectStoredKeyName } = options;
+        this._keyedObjectStoredKeyName = keyedObjectStoredKeyName;
     }
 
-    getDictionaryStoredKeyName() {
-        return this._dictionaryStoredKeyName;
+    getKeyedObjectStoredKeyName() {
+        return this._keyedObjectStoredKeyName;
     }
 }

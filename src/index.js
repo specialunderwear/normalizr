@@ -1,6 +1,6 @@
 import EntitySchema from './EntitySchema';
 import IterableSchema from './IterableSchema';
-import DictionarySchema from './DictionarySchema.js';
+import KeyedObjectSchema from './KeyedObjectSchema.js';
 import UnionSchema from './UnionSchema';
 import isEqual from 'lodash/isEqual';
 import isObject from 'lodash/isObject';
@@ -28,15 +28,15 @@ function visitObject(obj, schema, bag, options, collectionKey) {
   return normalized;
 }
 
-function visitDictionary(obj, schema, bag, options) {
-    const dictionaryStoredKeyName = schema.getDictionaryStoredKeyName();
+function visitKeyedObject(obj, schema, bag, options) {
+    const keyedObjectStoredKeyName = schema.getKeyedObjectStoredKeyName();
     const itemSchema = schema.getItemSchema();
 
     return Object.keys(obj).reduce(function (objMap, key) {
-        const dictionaryEntry = obj[key];
-        dictionaryEntry[dictionaryStoredKeyName] = key;
-        const storageId = itemSchema.getId(dictionaryEntry, key);
-        const entity = visitEntity(dictionaryEntry, itemSchema, bag, options, storageId);
+        const entry = obj[key];
+        entry[keyedObjectStoredKeyName] = key;
+        const storageId = itemSchema.getId(entry, key);
+        const entity = visitEntity(entry, itemSchema, bag, options, storageId);
         objMap[key] = entity;
         return objMap
     }, {});
@@ -119,8 +119,8 @@ function visit(obj, schema, bag, options, collectionKey) {
 
   if (schema instanceof EntitySchema) {
     return visitEntity(obj, schema, bag, options, collectionKey);
-  } else if (schema instanceof DictionarySchema) {
-      return visitDictionary(obj, schema, bag, options);
+  } else if (schema instanceof KeyedObjectSchema) {
+      return visitKeyedObject(obj, schema, bag, options);
   } else if (schema instanceof IterableSchema) {
     return visitIterable(obj, schema, bag, options);
   } else if (schema instanceof UnionSchema) {
@@ -145,8 +145,8 @@ export function valuesOf(schema, options) {
   return new IterableSchema(schema, options);
 }
 
-export function dictionaryOf(schema, options) {
-    return new DictionarySchema(schema, options);
+export function keyedObjectOf(schema, options) {
+    return new KeyedObjectSchema(schema, options);
 }
 
 export function unionOf(schema, options) {
